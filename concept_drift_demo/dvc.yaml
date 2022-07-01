@@ -1,0 +1,24 @@
+stages:
+  data_preparation_cd_demo:
+    cmd: python ../stages/data_preparation_cd_demo.py --config=params.yaml
+    deps:
+      - ../stages/data_preparation_cd_demo.py
+    params:
+      - base
+    outs:
+      - ${base.data_dir_demo}/y_corrupted_demo.pkl
+  evaluation_cd_demo:
+    cmd: python ../stages/evaluation_cd_demo.py --config=params.yaml
+    deps:
+      - ../stages/evaluation_cd_demo.py
+      - ${base.data_dir}/y_corrupted_demo.pkl
+      - ../${detector.dir}/${detector.concept_drift.fname_noworking}
+    params:
+      - base
+      - detector
+      - evaluation
+    plots:
+      - ${evaluation.plots_dir}/corrupted_demo.png:
+          cache: false
+      - ${evaluation.plots_dir}/demo_feature_score.png:
+          cache: false

@@ -1,0 +1,17 @@
+base:
+  data_dir: ../data/bike-sharing
+  data_dir_demo: data
+  data_fname: hour.csv
+  # random_state: 5
+
+# data_preparation:
+  # test_size: 0.33
+  # data_split: month
+
+detector:
+  dir: models
+  concept_drift:
+    fname_noworking: cd_detector_nowrk.joblib
+
+evaluation:
+  plots_dir: plots

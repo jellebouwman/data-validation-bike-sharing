@@ -1,0 +1,284 @@
+schema: '2.0'
+stages:
+  data_preparation:
+    cmd: python stages/data_preparation.py --config=params.yaml
+    deps:
+    - path: stages/data_preparation.py
+      md5: 00c78c415693104423a03b65bbb25fd4
+      size: 6960
+    params:
+      params.yaml:
+        base:
+          data_dir: data/bike-sharing
+          data_fname: hour.csv
+          random_state: 5
+        data_preparation:
+          test_size: 0.33
+          data_split: random
+    outs:
+    - path: data/bike-sharing/X_cd_nowrk_test.npy
+      md5: 7aa83a68052acccdafe31e05dd85d3c9
+      size: 4736
+    - path: data/bike-sharing/X_cd_nowrk_train.npy
+      md5: 440942f13a95288f69c852eccf7a50dd
+      size: 17792
+    - path: data/bike-sharing/X_cd_wrk_test.npy
+      md5: df09246e9e8a36ea4e8655246a5150a2
+      size: 9536
+    - path: data/bike-sharing/X_cd_wrk_train.npy
+      md5: 3e3a1670ebde469069ab7581ebc14ac5
+      size: 37568
+    - path: data/bike-sharing/X_test.pkl
+      md5: 76f70b4e4170803aa4e34ecac08b2129
+      size: 77610
+    - path: data/bike-sharing/X_train.pkl
+      md5: 7479dbc78f55161d7a45e297704290ce
+      size: 156170
+    - path: data/bike-sharing/y_test.pkl
+      md5: f65b28a8defe61fcafae427418340550
+      size: 23879
+    - path: data/bike-sharing/y_train.pkl
+      md5: 013a76d74aac4b6bd9590aca7210960e
+      size: 47447
+  model_training:
+    cmd: python stages/model_training.py --config=params.yaml
+    deps:
+    - path: data/bike-sharing/X_train.pkl
+      md5: 7479dbc78f55161d7a45e297704290ce
+      size: 156170
+    - path: data/bike-sharing/y_train.pkl
+      md5: 013a76d74aac4b6bd9590aca7210960e
+      size: 47447
+    - path: stages/model_training.py
+      md5: 4d03435d4d8b6ff496f53c00e6513452
+      size: 1677
+    params:
+      params.yaml:
+        base:
+          data_dir: data/bike-sharing
+          data_fname: hour.csv
+          random_state: 5
+        train:
+          model_dir: models
+          model_fname: pipe.joblib
+          n_estimators: 50
+    outs:
+    - path: models/pipe.joblib
+      md5: 093f02c684f087fb6934d4346d3dd701
+      size: 528341583
+  detector_training:
+    cmd: python stages/detector_training.py --config=params.yaml
+    deps:
+    - path: data/bike-sharing/X_train.pkl
+      md5: d0d8c896144fa3f99cdda66bcee6839a
+      size: 173361
+    - path: stages/detector_training.py
+      md5: e1271dd49fc203069999787286b31b74
+      size: 1138
+    params:
+      params.yaml:
+        base:
+          data_dir: data/bike-sharing
+          data_fname: hour.csv
+          random_state: 5
+        detector:
+          dir: models
+          data_drift:
+            fname: detector.joblib
+          concept_drift:
+            fname_working: cd_detector_wrk.joblib
+            fname_noworking: cd_detector_nowrk.joblib
+            latent_dim_working: 48
+            latent_dim_noworking: 12
+    outs:
+    - path: models/detector.joblib
+      md5: 577ef5967785b78179db35363041ef09.dir
+      size: 155723
+      nfiles: 2
+  evaluation:
+    cmd: python stages/evaluation.py --config=params.yaml
+    deps:
+    - path: data/bike-sharing/X_test.pkl
+      md5: 76f70b4e4170803aa4e34ecac08b2129
+      size: 77610
+    - path: data/bike-sharing/y_test.pkl
+      md5: f65b28a8defe61fcafae427418340550
+      size: 23879
+    - path: models/cd_detector_nowrk.joblib
+      md5: 37eb7e2e4f19a85aeb57b2cc99b1f69a.dir
+      size: 64095
+      nfiles: 6
+    - path: models/cd_detector_wrk.joblib
+      md5: 33fad0052be9e3cbd3379f2e0197468f.dir
+      size: 136796
+      nfiles: 6
+    - path: models/detector.joblib
+      md5: e2a9a231006bd0b949c24f4bed722936.dir
+      size: 140130
+      nfiles: 2
+    - path: models/pipe.joblib
+      md5: 093f02c684f087fb6934d4346d3dd701
+      size: 528341583
+    - path: stages/evaluation.py
+      md5: 6ff4ec23632eded5a2351078c0df940a
+      size: 18443
+    params:
+      params.yaml:
+        base:
+          data_dir: data/bike-sharing
+          data_fname: hour.csv
+          random_state: 5
+        detector:
+          dir: models
+          data_drift:
+            fname: detector.joblib
+          concept_drift:
+            fname_working: cd_detector_wrk.joblib
+            fname_noworking: cd_detector_nowrk.joblib
+            latent_dim_working: 48
+            latent_dim_noworking: 12
+        evaluation:
+          metrics_dir: metrics
+          plots_dir: plots
+        train:
+          model_dir: models
+          model_fname: pipe.joblib
+          n_estimators: 50
+    outs:
+    - path: metrics/concept_drift.json
+      md5: 37e29b59127ab825e31c41dab667a19d
+      size: 171
+    - path: metrics/data_drift.json
+      md5: a7e3875ace59f0c36e93cc07a4c5178a
+      size: 66
+    - path: metrics/ml.json
+      md5: 310ab7738bca3bda2249f9b404862aa7
+      size: 50
+    - path: plots/cnt_average_nowrk_day_orig.json
+      md5: db4770dde3327d9e0f6eff734df57b01
+      size: 2259
+    - path: plots/cnt_average_nowrk_day_reconstructed.json
+      md5: bbaa5c9aa28c02e28c3b92f9d8d3dbc9
+      size: 2263
+    - path: plots/cnt_average_wrk_day_orig.json
+      md5: 9911ad1566c10c1445b1b1cb568c6acc
+      size: 2258
+    - path: plots/cnt_average_wrk_day_reconstructed.json
+      md5: 30101bed20565e5bf79a5e9369ce6e80
+      size: 2258
+    - path: plots/concept_drift_non_working_day.png
+      md5: 7f92e51ffabca77afc9177f4a26bb06f
+      size: 55227
+    - path: plots/concept_drift_working_day.png
+      md5: 9f3e1816e3cc8f3ca183279a075cfa01
+      size: 54654
+    - path: plots/detector_non_working_day.png
+      md5: 2986ba0d50c0f77fc40f0a5ad5397b3b
+      size: 58828
+    - path: plots/detector_working_day.png
+      md5: df8caea39380e3f7c38693133d62a749
+      size: 60039
+    - path: plots/hum_feature_distribution.png
+      md5: e8ba25ee08ce39d64d526a8628214454
+      size: 42981
+    - path: plots/temp_feature_distribution.png
+      md5: 2b9d97d331408a7ee7282f3e068264ef
+      size: 48336
+  prediction_detector_training:
+    cmd: python stages/prediction_drift_detector_training.py --config=params.yaml
+    deps:
+    - path: data/bike-sharing/X_train.pkl
+      md5: 452c232628a5fb9f26d083a40f23a793
+      size: 73742
+    - path: models/pipe.joblib
+      md5: d11e059c33fa055e9fad1eb67fc34d98
+      size: 107367048
+    - path: stages/prediction_drift_detector_training.py
+      md5: 286e95577222a0cf077d2e4f6cdefd3d
+      size: 1577
+    params:
+      params.yaml:
+        base:
+          data_dir: data/bike-sharing
+          data_fname: hour.csv
+          random_state: 5
+        detector:
+          detector_dir: models
+          detector_fname: detector.joblib
+          prediction_detector_dir: models
+          prediction_detector_fname: prediction_detector.joblib
+          detector_type: MMDDrift
+        train:
+          model_dir: models
+          model_fname: pipe.joblib
+          n_estimators: 50
+    outs:
+    - path: models/prediction_detector.joblib
+      md5: 5b81f8f7dbd667926599a4684c9a21e2.dir
+      size: 4360
+      nfiles: 2
+  concept_drift_detector_training:
+    cmd: python stages/concept_drift_detector_training.py --config=params.yaml
+    deps:
+    - path: data/bike-sharing/X_cd_nowrk_train.npy
+      md5: 440942f13a95288f69c852eccf7a50dd
+      size: 17792
+    - path: data/bike-sharing/X_cd_wrk_train.npy
+      md5: 3e3a1670ebde469069ab7581ebc14ac5
+      size: 37568
+    - path: stages/concept_drift_detector_training.py
+      md5: 9b75a4640af6b9e666c21db15f7a899c
+      size: 2492
+    params:
+      params.yaml:
+        base:
+          data_dir: data/bike-sharing
+          data_fname: hour.csv
+          random_state: 5
+        detector:
+          dir: models
+          data_drift:
+            fname: detector.joblib
+          concept_drift:
+            fname_working: cd_detector_wrk.joblib
+            fname_noworking: cd_detector_nowrk.joblib
+            latent_dim_working: 48
+            latent_dim_noworking: 12
+    outs:
+    - path: models/cd_detector_nowrk.joblib
+      md5: 37eb7e2e4f19a85aeb57b2cc99b1f69a.dir
+      size: 64095
+      nfiles: 6
+    - path: models/cd_detector_wrk.joblib
+      md5: 33fad0052be9e3cbd3379f2e0197468f.dir
+      size: 136796
+      nfiles: 6
+  covariate_drift_detector_training:
+    cmd: python stages/covariate_drift_detector_training.py --config=params.yaml
+    deps:
+    - path: data/bike-sharing/X_train.pkl
+      md5: 7479dbc78f55161d7a45e297704290ce
+      size: 156170
+    - path: stages/covariate_drift_detector_training.py
+      md5: 037ee4a35c6253dbfb69247e800e6dd4
+      size: 1435
+    params:
+      params.yaml:
+        base:
+          data_dir: data/bike-sharing
+          data_fname: hour.csv
+          random_state: 5
+        detector:
+          dir: models
+          data_drift:
+            fname: detector.joblib
+          concept_drift:
+            fname_working: cd_detector_wrk.joblib
+            fname_noworking: cd_detector_nowrk.joblib
+            latent_dim_working: 48
+            latent_dim_noworking: 12
+    outs:
+    - path: models/detector.joblib
+      md5: e2a9a231006bd0b949c24f4bed722936.dir
+      size: 140130
+      nfiles: 2
