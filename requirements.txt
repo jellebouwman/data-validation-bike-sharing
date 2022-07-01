@@ -1,5 +1,5 @@
 alibi-detect==0.9.1
-dvc==2.10.1
+dvc==2.11.0
 numpy
 pandas
 seaborn
