@@ -1,8 +1,4 @@
-# TODO: Update readme.
-
 # Data-validation-scenario
-
-Please, see the blog post at ... for a full explanation.
 
 There is a large boom of ML systems deployed to production these days. This
 brings many demands to ML engineers. ML pipeline automation is possibly the most
@@ -116,8 +112,8 @@ of the following stages:
   is a drift in the training/test dataset split.
 
 The second `dvc.yaml` file is located in the `concept_drift_demo` folder and it
-shall reproduce the business scenario when there starts a new competition (
-please see the blog post for more information). This file has only two stages:
+shall reproduce the business scenario when there starts a new competition. 
+This file has only two stages:
 
 - *data_preparation_cd_demo* - This stage modifies the original dataset and
   artificially creates concept drift in the data.
