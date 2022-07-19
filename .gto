@@ -1,0 +1,3 @@
+# .gto config file
+types: [model, dataset]  # list of allowed Types
+stages: [dev, stage, prod]  # list of allowed Stages

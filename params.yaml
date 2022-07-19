@@ -9,7 +9,7 @@ data_preparation:
 
 train:
   model_dir: models
-  model_fname: ML_bike_sharing.joblib
+  model_fname: ML_bike_sharing
   n_estimators: 50
 
 detector:

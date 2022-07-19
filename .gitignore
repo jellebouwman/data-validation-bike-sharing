@@ -162,6 +162,5 @@ cython_debug/
 .vscode/
 dvc_plots/
 notebooks/
-.mlem/
 .venv_10/
 local_remote/

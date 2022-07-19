@@ -7,8 +7,10 @@ from sklearn.ensemble import RandomForestClassifier
 
 from utils.load_params import load_params
 
+from mlem.api import save
 
-def train_model(data_dir: Path, model_dir: Path, model_fname: Path,
+
+def train_model(data_dir: Path, model_fname: str,
                 random_state: int, n_estimators: int):
     """Trains and saves ML model for prediction of rented bikes.
 
@@ -26,8 +28,10 @@ def train_model(data_dir: Path, model_dir: Path, model_fname: Path,
         random_state=random_state)
 
     clf.fit(X_train, y_train)
-    model_dir.mkdir(exist_ok=True)
-    dump(clf, model_dir / model_fname)
+    # model_dir.mkdir(exist_ok=True)
+    # dump(clf, model_dir / model_fname)
+
+    save(clf, model_fname, sample_data=X_train, description="Random Forest Classifier for bike sharing dataset", labels=['bike-sharing-model'])
 
 
 if __name__ == '__main__':
@@ -37,10 +41,11 @@ if __name__ == '__main__':
 
     params = load_params(params_path=args.config)
     data_dir = Path(params['base']['data_dir'])
-    model_dir = Path(params['train']['model_dir'])
-    model_fname = Path(params['train']['model_fname'])
+    # model_dir = Path(params['train']['model_dir'])
+    # model_fname = Path(params['train']['model_fname'])
+    model_fname = params['train']['model_fname']
     random_state = params['base']['random_state']
     n_estimators = params['train']['n_estimators']
 
-    train_model(data_dir=data_dir, model_dir=model_dir, model_fname=model_fname,
+    train_model(data_dir=data_dir, model_fname=model_fname,
                 random_state=random_state, n_estimators=n_estimators)

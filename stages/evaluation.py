@@ -7,12 +7,14 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from alibi_detect.utils.saving import load_detector
-from joblib import load
+# from joblib import load
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 from utils.bike_sharing_utils import encode_decode_seq
 from utils.bike_sharing_utils import get_working_day_aggregation
 from utils.load_params import load_params
+
+from mlem.api import load
 
 
 def generate_histogram_plots(plots_dir: Path, X_train: pd.DataFrame,
@@ -92,7 +94,7 @@ def generate_working_day_json(plots_dir: Path, X_cd_wrk_test: np.ndarray,
             enumerate(X_cd_nowrk_test_decoded)]}, fd, indent=4)
 
 
-def evaluate_ml_model(data_dir: Path, model_dir: Path, model_fname: Path,
+def evaluate_ml_model(data_dir: Path, model_dir: Path, model_fname: str,
                       metrics_dir: Path):
     """Evaluate and saves metrics of trained ML model.
 
@@ -106,7 +108,8 @@ def evaluate_ml_model(data_dir: Path, model_dir: Path, model_fname: Path,
     X_test = pd.read_pickle(data_dir / 'X_test.pkl')
     y_test = pd.read_pickle(data_dir / 'y_test.pkl')
 
-    clf = load(model_dir / model_fname)
+    # clf = load(model_dir / model_fname)
+    clf = load(model_fname)
 
     ml_metrics = {
         'mean_squared_error': mean_squared_error(y_test, clf.predict(X_test)), }
@@ -160,7 +163,8 @@ if __name__ == '__main__':
     detector_dir = Path(params['detector']['dir'])
     data_drift_fname = Path(params['detector']['data_drift']['fname'])
     model_dir = Path(params['train']['model_dir'])
-    model_fname = Path(params['train']['model_fname'])
+    # model_fname = Path(params['train']['model_fname'])
+    model_fname = params['train']['model_fname']
 
     metrics_dir = Path(params['evaluation']['metrics_dir'])
     metrics_dir.mkdir(exist_ok=True)

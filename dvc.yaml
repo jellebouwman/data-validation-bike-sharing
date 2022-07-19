@@ -21,7 +21,9 @@ stages:
       - base
       - train
     outs:
-      - ${train.model_dir}/${train.model_fname}
+      - .mlem/model/${train.model_fname}
+      - .mlem/model/${train.model_fname}.mlem:
+          cache: false
   covariate_drift_detector_training:
     cmd: python stages/covariate_drift_detector_training.py --config=params.yaml
     deps:
@@ -38,7 +40,7 @@ stages:
       - stages/evaluation.py
       - ${base.data_dir}/X_test.pkl
       - ${base.data_dir}/y_test.pkl
-      - ${train.model_dir}/${train.model_fname}
+      - .mlem/model/${train.model_fname}
       - ${detector.dir}/${detector.data_drift.fname}
     params:
       - base

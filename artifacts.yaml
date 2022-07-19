@@ -1,0 +1,6 @@
+covariate-shift-detector:
+  labels:
+  - covariate-shift-detector
+  path: models/covariate_shift_detector.joblib/
+  type: model
+  description: A MMDrift detector from Alibi-detect library that detects if there is a covariate shift between the training and test dataset for ML model.
