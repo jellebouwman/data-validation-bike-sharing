@@ -13,10 +13,9 @@ process.
 In this repository, we show how we may integrate data drift
 detection ([alibi-detect](https://github.com/SeldonIO/alibi-detect) library)
 with [DVC](https://dvc.org/) into the ML system and how is DVC beneficial in it.
-We demonstrate the drift detection in two use cases:
+We demonstrate the drift detection in one use case:
 
 - Detection of covariate shift between train and test datasets.
-- Detection of concept drift in the input data.
 
 We refer to an
 excellent [Data Distribution Shifts and Monitoring post](https://huyenchip.com/2022/02/07/data-distribution-shifts-and-monitoring.html)
@@ -89,16 +88,9 @@ use [The Maximum Mean Discrepancy (MMD)](https://docs.seldon.io/projects/alibi-d
 the detector as it is popular, easy to use and gives good results in our use
 case.
 
-There are patterns in how bikes are rented throughout the day. We detect changes
-in these patters
-with [Seq2Seq detector](https://docs.seldon.io/projects/alibi-detect/en/latest/examples/od_seq2seq_ecg.html)
-.
-
 ### DVC pipeline
 
-There are two `dvc.yaml` files in the repository.
-
-The first `dvc.yaml` file is located in the root of the repository and consists
+The `dvc.yaml` file is located in the root of the repository and consists
 of the following stages:
 
 - *data_preparation* - This stage downloads data if not already present and
@@ -106,23 +98,12 @@ of the following stages:
 - *model_training* - This stage trains a simple RandomForrestClassifier model.
 - *covariate_drift_detector_training* - This stage trains a covariate drift
   detector.
-- *concept_drift_detector_training* - This stage trains a concept drift
-  detector.
 - *evaluation* - This stage evaluates the performance of the model and if there
   is a drift in the training/test dataset split.
 
-The second `dvc.yaml` file is located in the `concept_drift_demo` folder and it
-shall reproduce the business scenario when there starts a new competition. 
-This file has only two stages:
-
-- *data_preparation_cd_demo* - This stage modifies the original dataset and
-  artificially creates concept drift in the data.
-- *evaluation_cd_demo* - This stage evaluates if there is a concept drift in the
-  input data.
-
 ## Scenarios
 
-We demonstrate the drift detection in the following scenarios.
+We demonstrate the drift detection on the following scenario.
 
 ### 1) Validation of training/test split
 
@@ -147,52 +128,3 @@ prevalence is also normalized meaning that the sum of all bins for one dataset
 is equal to 1.
 
 ![temp_feature_distribution](plots/temp_feature_distribution.png)
-
-### 2) Validation of concept drift
-
-Concept drift occurs when there is a change in the pattern that the ML model
-learns and new data. We detect this by training a detector on a historical 15
-months of data. From this historical data, we have learned that there are two
-bike-rental patterns, one for a working day and one for a non-working day. We
-have trained
-a [Seq2Seq detector](https://docs.seldon.io/projects/alibi-detect/en/latest/examples/od_seq2seq_ecg.html)
-to detect if this pattern changes over time.
-
-You can run this pipeline with
-
-```bash
-$ dvc repro concept_drift_demo/dvc.yaml
-```
-
-The graphs that we can see below represent a bike-rental pattern in the data.
-There are two graphs, one for a working day and one for a non-working day. On
-the horizontal axis is an hour of a day. On the vertical axis is a relative
-ratio of rented bikes. The relative ratio is calculated by dividing the number
-of rented bikes in the hour by the total number of rented bikes per day.
-
-There are two signals in the graphs. The blue line represents a pattern that we
-can see in the data. The orange line is an output of the concept drift detector.
-The closer the two lines are the better.
-
-![concept_drift_working_day](plots/concept_drift_working_day.png)
-![concept_drift_non_working_day](plots/concept_drift_non_working_day.png)
-
-Now, imagine the following scenario. We trained our ML model on March and April
-data and it worked fine at the beginning of May. But then, a new competitor in
-the area starts to offer significant discounts for afternoon hours during
-weekends. This will have a tremendous effect on the number of rented bikes.
-Estimate says that this decreased the number of rented bikes by 70%.
-
-This type of scenario is a typical example of concept drift. We can detect this
-concept drift with our detector as shown in the following figure. The blue line
-is the measured number of rented bikes in the first week of May and is the input
-to the concept drift detector. The orange line is the reconstructed pattern from
-the detector. We can see that there is quite a significant between these two
-signals and we can also see that the drift was detected.
-
-![corrupted_demo](concept_drift_demo/plots/corrupted_demo.png)
-
-The reconstruction error (called feature score in this case) can be further seen
-in the following graph
-
-![corrupted_demo](concept_drift_demo/plots/demo_feature_score.png)
