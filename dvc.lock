@@ -48,10 +48,10 @@ stages:
           random_state: 5
         train:
           model_dir: models
-          model_fname: pipe.joblib
+          model_fname: ML_bike_sharing.joblib
           n_estimators: 50
     outs:
-    - path: models/pipe.joblib
+    - path: models/ML_bike_sharing.joblib
       md5: 093f02c684f087fb6934d4346d3dd701
       size: 528341583
   detector_training:
@@ -92,13 +92,13 @@ stages:
     - path: data/bike-sharing/y_test.pkl
       md5: f65b28a8defe61fcafae427418340550
       size: 23879
-    - path: models/detector.joblib
+    - path: models/ML_bike_sharing.joblib
+      md5: 093f02c684f087fb6934d4346d3dd701
+      size: 528341583
+    - path: models/covariate_shift_detector.joblib
       md5: e2a9a231006bd0b949c24f4bed722936.dir
       size: 140130
       nfiles: 2
-    - path: models/pipe.joblib
-      md5: 093f02c684f087fb6934d4346d3dd701
-      size: 528341583
     - path: stages/evaluation.py
       md5: 359b55b15694509089d2d64cbafaf465
       size: 8152
@@ -111,27 +111,27 @@ stages:
         detector:
           dir: models
           data_drift:
-            fname: detector.joblib
+            fname: covariate_shift_detector.joblib
         evaluation:
           metrics_dir: metrics
           plots_dir: plots
         train:
           model_dir: models
-          model_fname: pipe.joblib
+          model_fname: ML_bike_sharing.joblib
           n_estimators: 50
     outs:
     - path: metrics/data_drift.json
-      md5: b8aad9b3e8954a869e93144eb2a62c5a
+      md5: 00343af970c2f87572c17d696ba4c1fb
       size: 66
     - path: metrics/ml.json
       md5: 310ab7738bca3bda2249f9b404862aa7
       size: 50
     - path: plots/hum_feature_distribution.png
-      md5: 349aa899fb78b3f0da91ec4a6ed7782f
-      size: 43146
+      md5: 539d7017b33c2d53a66f4846f952bcc7
+      size: 43385
     - path: plots/temp_feature_distribution.png
-      md5: 952ff81f20a717bbd82cd68575fc7d33
-      size: 48500
+      md5: 5a5a3d46f0c52f328f62295b03b3ef0f
+      size: 48732
   prediction_detector_training:
     cmd: python stages/prediction_drift_detector_training.py --config=params.yaml
     deps:
@@ -219,9 +219,9 @@ stages:
         detector:
           dir: models
           data_drift:
-            fname: detector.joblib
+            fname: covariate_shift_detector.joblib
     outs:
-    - path: models/detector.joblib
+    - path: models/covariate_shift_detector.joblib
       md5: e2a9a231006bd0b949c24f4bed722936.dir
       size: 140130
       nfiles: 2

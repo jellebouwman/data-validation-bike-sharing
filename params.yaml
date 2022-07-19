@@ -9,13 +9,13 @@ data_preparation:
 
 train:
   model_dir: models
-  model_fname: pipe.joblib
+  model_fname: ML_bike_sharing.joblib
   n_estimators: 50
 
 detector:
   dir: models
   data_drift:
-    fname: detector.joblib
+    fname: covariate_shift_detector.joblib
 
 evaluation:
   metrics_dir: metrics
