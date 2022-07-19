@@ -16,11 +16,6 @@ detector:
   dir: models
   data_drift:
     fname: detector.joblib
-  concept_drift:
-    fname_working: cd_detector_wrk.joblib
-    fname_noworking: cd_detector_nowrk.joblib
-    latent_dim_working: 48
-    latent_dim_noworking: 12
 
 evaluation:
   metrics_dir: metrics

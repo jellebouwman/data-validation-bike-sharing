@@ -11,10 +11,6 @@ stages:
       - ${base.data_dir}/X_test.pkl
       - ${base.data_dir}/y_train.pkl
       - ${base.data_dir}/y_test.pkl
-      - ${base.data_dir}/X_cd_wrk_train.npy
-      - ${base.data_dir}/X_cd_wrk_test.npy
-      - ${base.data_dir}/X_cd_nowrk_train.npy
-      - ${base.data_dir}/X_cd_nowrk_test.npy
   model_training:
     cmd: python stages/model_training.py --config=params.yaml
     deps:
@@ -36,18 +32,6 @@ stages:
       - detector
     outs:
       - ${detector.dir}/${detector.data_drift.fname}
-  concept_drift_detector_training:
-    cmd: python stages/concept_drift_detector_training.py --config=params.yaml
-    deps:
-      - stages/concept_drift_detector_training.py
-      - ${base.data_dir}/X_cd_wrk_train.npy
-      - ${base.data_dir}/X_cd_nowrk_train.npy
-    params:
-      - base
-      - detector
-    outs:
-      - ${detector.dir}/${detector.concept_drift.fname_working}
-      - ${detector.dir}/${detector.concept_drift.fname_noworking}
   evaluation:
     cmd: python stages/evaluation.py --config=params.yaml
     deps:
@@ -56,8 +40,6 @@ stages:
       - ${base.data_dir}/y_test.pkl
       - ${train.model_dir}/${train.model_fname}
       - ${detector.dir}/${detector.data_drift.fname}
-      - ${detector.dir}/${detector.concept_drift.fname_working}
-      - ${detector.dir}/${detector.concept_drift.fname_noworking}
     params:
       - base
       - detector
@@ -68,38 +50,8 @@ stages:
           cache: false
       - ${evaluation.metrics_dir}/data_drift.json:
           cache: false
-      - ${evaluation.metrics_dir}/concept_drift.json:
-          cache: false
     plots:
       - ${evaluation.plots_dir}/temp_feature_distribution.png:
           cache: false
       - ${evaluation.plots_dir}/hum_feature_distribution.png:
           cache: false
-      - ${evaluation.plots_dir}/concept_drift_working_day.png:
-          cache: false
-      - ${evaluation.plots_dir}/concept_drift_non_working_day.png:
-          cache: false
-      - ${evaluation.plots_dir}/detector_working_day.png:
-          cache: false
-      - ${evaluation.plots_dir}/detector_non_working_day.png:
-          cache: false
-      - ${evaluation.plots_dir}/cnt_average_wrk_day_orig.json:
-          cache: false
-          x: hour
-          y: rel_cnt
-          title: Average working day pattern from data
-      - ${evaluation.plots_dir}/cnt_average_wrk_day_reconstructed.json:
-          cache: false
-          x: hour
-          y: rel_cnt
-          title: Reconstructed working day pattern from drift detector
-      - ${evaluation.plots_dir}/cnt_average_nowrk_day_orig.json:
-          cache: false
-          x: hour
-          y: rel_cnt
-          title: Average non working day pattern from data
-      - ${evaluation.plots_dir}/cnt_average_nowrk_day_reconstructed.json:
-          cache: false
-          x: hour
-          y: rel_cnt
-          title: Reconstructed non working day pattern from drift detector

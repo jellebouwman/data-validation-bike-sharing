@@ -104,18 +104,3 @@ def get_working_day_aggregation(X_in: pd.DataFrame,
     X = X.mean()
     X = X / X.sum()
     return X
-
-
-def is_concept_drift(concept_drift_report_outliers: np.ndarray) -> bool:
-    """Decision whether there is drift in the data based on the drift report
-    information
-
-    Args:
-        concept_drift_report_outliers: Array of size 24 (one element for each
-        hour in day). Each element contains
-        information whether it exceeds the drift detection threshold
-
-    Returns:
-        Whether there is enough evidence of drift present in the report
-    """
-    return sum(concept_drift_report_outliers) > 2
