@@ -49,14 +49,14 @@ stages:
         train:
           model_dir: models
           model_fname: ML_bike_sharing
-          n_estimators: 50
+          n_estimators: 100
     outs:
     - path: .mlem/model/ML_bike_sharing
-      md5: d25ab26df07604df3ae4b91e0a9bf28f
-      size: 528340630
+      md5: c13a4d767fc521797930c7a98c17dc3a
+      size: 1055575348
     - path: .mlem/model/ML_bike_sharing.mlem
-      md5: 6d583db882dabf58b22bbc380db7e8bd
-      size: 3261
+      md5: 3c58c462d39e908853eb4d7e50bf4cdb
+      size: 3262
   detector_training:
     cmd: python stages/detector_training.py --config=params.yaml
     deps:
@@ -90,8 +90,8 @@ stages:
     cmd: python stages/evaluation.py --config=params.yaml
     deps:
     - path: .mlem/model/ML_bike_sharing
-      md5: d25ab26df07604df3ae4b91e0a9bf28f
-      size: 528340630
+      md5: c13a4d767fc521797930c7a98c17dc3a
+      size: 1055575348
     - path: data/bike-sharing/X_test.pkl
       md5: 76f70b4e4170803aa4e34ecac08b2129
       size: 77610
@@ -121,20 +121,20 @@ stages:
         train:
           model_dir: models
           model_fname: ML_bike_sharing
-          n_estimators: 50
+          n_estimators: 100
     outs:
     - path: metrics/data_drift.json
-      md5: 740e59d38cf53d82232af23f19dbc499
+      md5: 631871ee6d6abea722dba9bbdb9d2dc3
       size: 66
     - path: metrics/ml.json
-      md5: 310ab7738bca3bda2249f9b404862aa7
+      md5: 9016ca9bb48c57814e55a5cd614039ae
       size: 50
     - path: plots/hum_feature_distribution.png
-      md5: 39c3907f07029cd81703583bb0eaad07
-      size: 43241
+      md5: e8ba25ee08ce39d64d526a8628214454
+      size: 42981
     - path: plots/temp_feature_distribution.png
-      md5: c9ad4064727699bd470ac53a976e2835
-      size: 48596
+      md5: 2b9d97d331408a7ee7282f3e068264ef
+      size: 48336
   prediction_detector_training:
     cmd: python stages/prediction_drift_detector_training.py --config=params.yaml
     deps:
