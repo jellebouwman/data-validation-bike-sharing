@@ -2,12 +2,15 @@ covariate-shift-detector:
   description: A MMDrift detector from Alibi-detect library that detects if there
     is a covariate shift between the training and test dataset for ML model.
   labels:
-  - covariate-shift-detector
+  - covariate shift detector
+  - data drift
+  - data validation
   path: models/covariate_shift_detector.joblib/
   type: model
 ml-bike-sharing:
-  description: Random Forrest Classifier for bike sharing dataset
+  description: Random Forest Classifier for bike sharing dataset. The model predicts the number of rented bikes with hourly resolution.
   labels:
-  - bike-sharing-model
+  - bike sharing model
+  - random forest classifier
   path: .mlem/model/ML_bike_sharing
   type: model
