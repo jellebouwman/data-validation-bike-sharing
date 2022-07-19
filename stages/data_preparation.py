@@ -69,68 +69,6 @@ def save_data(data_dir: Path, X_train: pd.DataFrame, X_test: pd.DataFrame,
     y_test.to_pickle(data_dir / 'y_test.pkl')
 
 
-def get_concept_drift_data(raw_data: pd.DataFrame, workingday: int) -> \
-typing.Tuple[pd.DataFrame, pd.DataFrame]:
-    """Prepares training and test data for concept drift detector.
-
-    Args:
-        raw_data: Raw input data
-        workingday: 1 if the day is a working day and 0 if the day is holiday/weekend/...etc.
-
-    Returns:
-        Train and test features for concept drift detector.
-    """
-    X = raw_data.loc[f'2011-01-01 00:00:00':f'2012-03-30 23:00:00'].loc[
-        raw_data['workingday'] == workingday]
-    X = pd.pivot_table(X, index=['day'], columns=['hour'],
-                       values=['cnt_rel']).dropna()
-
-    X_train, X_test = train_test_split(X, test_size=0.2, random_state=5)
-    X_train, X_test = X_train.to_numpy()[:, :, np.newaxis], X_test.to_numpy()[:,
-                                                            :, np.newaxis]
-    return X_train, X_test
-
-
-def save_concept_drift_data(data_dir: Path, X_cd_wrk_train: np.ndarray,
-                            X_cd_wrk_test: np.ndarray,
-                            X_cd_nowrk_train: np.ndarray,
-                            X_cd_nowrk_test: np.ndarray):
-    """Saves training and test data for concept drift detector
-
-    Args:
-        data_dir: Folderpath where to save data.
-        X_cd_wrk_train: Training data for working day.
-        X_cd_wrk_test: Test data for working day.
-        X_cd_nowrk_train: Training data for non-working day.
-        X_cd_nowrk_test: Test data for non-working day.
-    """
-    np.save(data_dir / 'X_cd_wrk_train.npy', X_cd_wrk_train)
-    np.save(data_dir / 'X_cd_wrk_test.npy', X_cd_wrk_test)
-    np.save(data_dir / 'X_cd_nowrk_train.npy', X_cd_nowrk_train)
-    np.save(data_dir / 'X_cd_nowrk_test.npy', X_cd_nowrk_test)
-
-
-def save_concept_drift_data_for_demo(data_dir: Path, raw_data: pd.DataFrame):
-    """Prepares and saves data for demonstration of concept drift. The concept
-    drift is not present in the original data.
-    It is created artificially in this function.
-
-    Args:
-        data_dir: Folderpath where to save data.
-        raw_data: Raw input data.
-    """
-    # Simulate situation when there is a new competition that drops sales in
-    # morning hours by 70%
-    y_corrupted = raw_data.loc['2012-05-01 00:00:00':'2012-05-14 23:00:00']
-    y_corrupted_ind = y_corrupted.loc[y_corrupted['hour'] > 12].index
-    y_corrupted.loc[y_corrupted_ind, 'cnt'] = 0.3 * y_corrupted.loc[
-        y_corrupted_ind, 'cnt']
-
-    y_corrupted = get_working_day_aggregation(y_corrupted,
-                                              workingday=0).droplevel(level=0)
-    y_corrupted.to_pickle(data_dir / 'y_corrupted_demo.pkl')
-
-
 if __name__ == '__main__':
     args_parser = argparse.ArgumentParser()
     args_parser.add_argument('--config', dest='config', required=True)
@@ -152,13 +90,4 @@ if __name__ == '__main__':
                                                                     test_size=test_size,
                                                                     random_state=random_state)
     save_data(data_dir, X_train, X_test, y_train, y_test)
-
-    X_cd_wrk_train, X_cd_wrk_test = get_concept_drift_data(raw_data=raw_data,
-                                                           workingday=1)
-    X_cd_nowrk_train, X_cd_nowrk_test = get_concept_drift_data(
-        raw_data=raw_data, workingday=0)
-    save_concept_drift_data(data_dir=data_dir, X_cd_wrk_train=X_cd_wrk_train,
-                            X_cd_wrk_test=X_cd_wrk_test,
-                            X_cd_nowrk_train=X_cd_nowrk_train,
-                            X_cd_nowrk_test=X_cd_nowrk_test)
-    save_concept_drift_data_for_demo(data_dir=data_dir, raw_data=raw_data)
+    
