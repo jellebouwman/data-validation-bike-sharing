@@ -38,8 +38,8 @@ stages:
       md5: 013a76d74aac4b6bd9590aca7210960e
       size: 47447
     - path: stages/model_training.py
-      md5: 24de4c4015b2d710414134cdf09a031c
-      size: 1872
+      md5: b40ffd788c46f3f2ee981e8349e0e3d7
+      size: 1975
     params:
       params.yaml:
         base:
@@ -49,14 +49,14 @@ stages:
         train:
           model_dir: models
           model_fname: ML_bike_sharing
-          n_estimators: 100
+          n_estimators: 50
     outs:
     - path: .mlem/model/ML_bike_sharing
-      md5: c13a4d767fc521797930c7a98c17dc3a
-      size: 1055575348
+      md5: d25ab26df07604df3ae4b91e0a9bf28f
+      size: 528340630
     - path: .mlem/model/ML_bike_sharing.mlem
-      md5: 3c58c462d39e908853eb4d7e50bf4cdb
-      size: 3262
+      md5: 6d583db882dabf58b22bbc380db7e8bd
+      size: 3261
   detector_training:
     cmd: python stages/detector_training.py --config=params.yaml
     deps:
@@ -90,8 +90,8 @@ stages:
     cmd: python stages/evaluation.py --config=params.yaml
     deps:
     - path: .mlem/model/ML_bike_sharing
-      md5: c13a4d767fc521797930c7a98c17dc3a
-      size: 1055575348
+      md5: d25ab26df07604df3ae4b91e0a9bf28f
+      size: 528340630
     - path: data/bike-sharing/X_test.pkl
       md5: 76f70b4e4170803aa4e34ecac08b2129
       size: 77610
@@ -103,8 +103,8 @@ stages:
       size: 140130
       nfiles: 2
     - path: stages/evaluation.py
-      md5: e59524bb526d89bb3047028540d06fe8
-      size: 8265
+      md5: b836d63f3b786f34d3b025deea0595a2
+      size: 8346
     params:
       params.yaml:
         base:
@@ -121,20 +121,20 @@ stages:
         train:
           model_dir: models
           model_fname: ML_bike_sharing
-          n_estimators: 100
+          n_estimators: 50
     outs:
     - path: metrics/data_drift.json
-      md5: 631871ee6d6abea722dba9bbdb9d2dc3
+      md5: 16111a1d747eca3652438fcea25cc8fc
       size: 66
     - path: metrics/ml.json
-      md5: 9016ca9bb48c57814e55a5cd614039ae
-      size: 50
+      md5: 26db7bb3cc400d23ea0d5f227f0babc6
+      size: 87
     - path: plots/hum_feature_distribution.png
-      md5: e8ba25ee08ce39d64d526a8628214454
-      size: 42981
+      md5: 539d7017b33c2d53a66f4846f952bcc7
+      size: 43385
     - path: plots/temp_feature_distribution.png
-      md5: 2b9d97d331408a7ee7282f3e068264ef
-      size: 48336
+      md5: 5a5a3d46f0c52f328f62295b03b3ef0f
+      size: 48732
   prediction_detector_training:
     cmd: python stages/prediction_drift_detector_training.py --config=params.yaml
     deps:

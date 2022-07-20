@@ -1,7 +1,7 @@
 artifacts:
   data:
-    hash: c13a4d767fc521797930c7a98c17dc3a
-    size: 1055575348
+    hash: d25ab26df07604df3ae4b91e0a9bf28f
+    size: 528340630
     uri: ML_bike_sharing
 description: Random Forest Classifier for bike sharing dataset
 labels:

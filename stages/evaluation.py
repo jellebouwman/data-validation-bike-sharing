@@ -8,7 +8,7 @@ import pandas as pd
 import seaborn as sns
 from alibi_detect.utils.saving import load_detector
 # from joblib import load
-from sklearn.metrics import mean_squared_error, mean_absolute_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
 from utils.bike_sharing_utils import encode_decode_seq
 from utils.bike_sharing_utils import get_working_day_aggregation
@@ -112,7 +112,9 @@ def evaluate_ml_model(data_dir: Path, model_dir: Path, model_fname: str,
     clf = load(model_fname)
 
     ml_metrics = {
-        'mean_squared_error': mean_squared_error(y_test, clf.predict(X_test)), }
+        'mean_absolute_error': mean_absolute_error(y_test, clf.predict(X_test)), 
+        'r2_score': r2_score(y_test, clf.predict(X_test))
+        }
 
     json.dump(obj=ml_metrics, fp=open(metrics_dir / 'ml.json', 'w'), indent=4,
               sort_keys=True)

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 from joblib import dump
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 
 from utils.load_params import load_params
 
@@ -24,8 +24,8 @@ def train_model(data_dir: Path, model_fname: str,
     X_train = pd.read_pickle(data_dir / 'X_train.pkl')
     y_train = pd.read_pickle(data_dir / 'y_train.pkl')
 
-    clf = RandomForestClassifier(n_estimators=n_estimators,
-        random_state=random_state)
+    clf = RandomForestClassifier(n_estimators=n_estimators, random_state=random_state)
+    # clf = RandomForestRegressor(n_estimators=n_estimators, random_state=random_state)
 
     clf.fit(X_train, y_train)
     # model_dir.mkdir(exist_ok=True)

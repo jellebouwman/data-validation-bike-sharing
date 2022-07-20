@@ -1,3 +1,4 @@
 {
-    "mean_squared_error": 12592.806485355648
+    "mean_absolute_error": 69.22803347280335,
+    "r2_score": 0.5498496562586477
 }
