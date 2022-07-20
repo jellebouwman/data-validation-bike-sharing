@@ -1,7 +1,7 @@
 artifacts:
   data:
-    hash: d25ab26df07604df3ae4b91e0a9bf28f
-    size: 528340630
+    hash: 37db5d9bedcbae08b17e9832071f8991
+    size: 7484077
     uri: ML_bike_sharing
 description: Random Forest Classifier for bike sharing dataset
 labels:
@@ -39,45 +39,9 @@ model_type:
           type: dataframe
       name: predict
       returns:
-        dtype: int64
-        shape:
-        - null
-        type: ndarray
-    predict_proba:
-      args:
-      - name: data
-        type_:
-          columns:
-          - dteday_hr
-          - temp
-          - atemp
-          - hum
-          - windspeed
-          - hour
-          - weekday
-          - season
-          - holiday
-          - workingday
-          dtypes:
-          - datetime64[ns]
-          - float64
-          - float64
-          - float64
-          - float64
-          - int64
-          - int64
-          - int64
-          - int64
-          - int64
-          index_cols:
-          - dteday_hr
-          type: dataframe
-      name: predict_proba
-      returns:
         dtype: float64
         shape:
         - null
-        - 552
         type: ndarray
     sklearn_predict:
       args:
@@ -110,45 +74,9 @@ model_type:
           type: dataframe
       name: predict
       returns:
-        dtype: int64
-        shape:
-        - null
-        type: ndarray
-    sklearn_predict_proba:
-      args:
-      - name: X
-        type_:
-          columns:
-          - dteday_hr
-          - temp
-          - atemp
-          - hum
-          - windspeed
-          - hour
-          - weekday
-          - season
-          - holiday
-          - workingday
-          dtypes:
-          - datetime64[ns]
-          - float64
-          - float64
-          - float64
-          - float64
-          - int64
-          - int64
-          - int64
-          - int64
-          - int64
-          index_cols:
-          - dteday_hr
-          type: dataframe
-      name: predict_proba
-      returns:
         dtype: float64
         shape:
         - null
-        - 552
         type: ndarray
   type: sklearn
 object_type: model
