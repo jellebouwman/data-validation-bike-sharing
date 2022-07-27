@@ -7,8 +7,14 @@ covariate-shift-detector:
   - data validation
   path: models/covariate_shift_detector.joblib/
   type: model
+demo-model:
+  labels:
+  - ''
+  path: demo-model
+  type: model
 ml-bike-sharing:
-  description: Random Forest Classifier for bike sharing dataset. The model predicts the number of rented bikes with hourly resolution.
+  description: Random Forest Classifier for bike sharing dataset. The model predicts
+    the number of rented bikes with hourly resolution.
   labels:
   - bike sharing model
   - random forest classifier
